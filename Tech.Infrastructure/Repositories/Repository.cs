@@ -30,6 +30,9 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : AudiTabl
 	public async Task<bool> ExistAsync(long id, CancellationToken cancellation = default)
 		=> await dbSet.AnyAsync(x => x.Id == id, cancellation);
 
+	public async Task<bool> SaveAsync(CancellationToken cancellation = default)
+		=> await dbContext.SaveChangesAsync(cancellation).ConfigureAwait(false) > 0;
+
 	public Task<IQueryable<TEntity>> SelectAllAsync(Expression<Func<TEntity, bool>> expression = null, string[] includes = null, CancellationToken cancellation = default)
 	{
 		return Task.Run(async () =>
