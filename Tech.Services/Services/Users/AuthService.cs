@@ -20,16 +20,16 @@ public class AuthService : IAuthService
     public string GenerateToken(User user)
 	{
 		var claims = new[]
-		{
+	   {
 			new Claim("Id", user.Id.ToString()),
 			new Claim(ClaimTypes.Name, user.Firstname + " " + user.Lastname),
 			new Claim("PhoneNumber", user.PhoneNumber),
 			new Claim(ClaimTypes.Role, user.UserRole.ToString())
 		};
 
-		var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Secretkey"]));
+		var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecretKey"]));
 		var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-		var tokenDestrictor	= new JwtSecurityToken(
+		var tokenDestrictor = new JwtSecurityToken(
 			configuration["Issuer"],
 			configuration["Audience"],
 			claims,

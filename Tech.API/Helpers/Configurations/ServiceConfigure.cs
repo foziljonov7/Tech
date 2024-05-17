@@ -20,6 +20,12 @@ public static class ServiceConfigure
 		services.AddDbContext<AppDbContext>(options
 			=> options.UseNpgsql(connectionString));
 
+		return services;
+	}
+
+	public static IServiceCollection AddServiceConfigure(
+		this IServiceCollection services)
+	{
 		//Repository configuration
 		services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

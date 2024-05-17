@@ -10,9 +10,9 @@ public class PasswordHelper
         return (hash: hash, salt: salt);
     }
 
-    public static bool Verify(string password, string hash, string salt)
+    public static bool Verify(string password, string salt, string hash)
         => BCrypt.Net.BCrypt.Verify(salt + password + Key, hash);
 
-    private static string GenerateSalt()
+	private static string GenerateSalt()
         => Guid.NewGuid().ToString();
 }
