@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Tech.Domain.Enums.Courses;
+﻿using Tech.Domain.Enums.Courses;
 using Tech.Domain.Helpers.Commons;
 
 namespace Tech.Domain.Entities;
@@ -12,6 +11,6 @@ public class Course : AudiTable
     public User Teacher { get; set; }
     public DateTimeOffset? StartingDate { get; set; }  
     public double Price { get; set; }
-    public Roles Status { get; set; }
-    public Collection<User> Students { get; set; } = new Collection<User>();
+    public Status Status { get; set; }
+    public ICollection<CourseEnrollment> Students { get; set; }
 }

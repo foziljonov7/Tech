@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech.API", "Tech.API\Tech.API.csproj", "{9D993220-75C1-4DB3-B45F-EF483823A1E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tech.API", "Tech.API\Tech.API.csproj", "{9D993220-75C1-4DB3-B45F-EF483823A1E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech.Domain", "Tech.Domain\Tech.Domain.csproj", "{9DDCD9EA-F261-4304-BCD2-28FD4FB9B7E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tech.Domain", "Tech.Domain\Tech.Domain.csproj", "{9DDCD9EA-F261-4304-BCD2-28FD4FB9B7E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech.Services", "Tech.Services\Tech.Services.csproj", "{D9AAF4B2-B40C-48A4-9488-B03C1D2B6058}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tech.Services", "Tech.Services\Tech.Services.csproj", "{D9AAF4B2-B40C-48A4-9488-B03C1D2B6058}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech.Infrastructure", "Tech.Infrastructure\Tech.Infrastructure.csproj", "{E95966D9-F257-47EC-A680-6399E062A742}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tech.Infrastructure", "Tech.Infrastructure\Tech.Infrastructure.csproj", "{E95966D9-F257-47EC-A680-6399E062A742}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech.DAL", "Tech.DAL\Tech.DAL.csproj", "{49CDF25F-B11E-4BBA-AFDB-AA5C69D32751}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tech.DAL", "Tech.DAL\Tech.DAL.csproj", "{49CDF25F-B11E-4BBA-AFDB-AA5C69D32751}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

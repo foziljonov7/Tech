@@ -1,6 +1,6 @@
 ﻿namespace Tech.Domain.Enums.Courses;
 
-public enum Roles
+public enum Status
 {
 	Active = 0,
 	Disable,
