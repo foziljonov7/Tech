@@ -96,7 +96,7 @@ namespace Tech.API.Controllers.Users
 			});
 
 		[AllowAnonymous]
-		[HttpGet("{phone}")]
+		[HttpGet("phone/{phone}")]
 		public async Task<IActionResult> RetrieveByPhoneNumberAsync(
 			[FromRoute(Name = "phone")] string phone,
 			CancellationToken cancellation = default)
