@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Tech.DAL.DTOs.UserDTOs;
 using Tech.Domain.Entities;
-using Tech.Domain.Enums;
+using Tech.Domain.Enums.Users;
 using Tech.Infrastructure.Interfaces;
 using Tech.Services.Commons.Exceptions;
 using Tech.Services.Helpers;

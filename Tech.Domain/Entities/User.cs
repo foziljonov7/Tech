@@ -1,4 +1,5 @@
-﻿using Tech.Domain.Enums;
+﻿using System.Collections.ObjectModel;
+using Tech.Domain.Enums.Users;
 using Tech.Domain.Helpers.Commons;
 
 namespace Tech.Domain.Entities;
@@ -11,4 +12,5 @@ public class User : AudiTable
     public string Password { get; set; }
     public string Salt { get; set; }
     public Roles UserRole { get; set; }
+    public Collection<Course> Courses { get; set; } = new Collection<Course>();
 }

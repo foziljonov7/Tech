@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Tech.Domain.Enums;
+using Tech.Domain.Enums.Users;
 
 namespace Tech.DAL.DTOs.UserDTOs;
 
