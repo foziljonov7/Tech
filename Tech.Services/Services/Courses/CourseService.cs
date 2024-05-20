@@ -1,33 +1,85 @@
-﻿using Tech.Domain.Entities;
+﻿using AutoMapper;
+using Tech.DAL.DTOs.CourseDTOs;
+using Tech.Domain.Entities;
 using Tech.Infrastructure.Interfaces;
+using Tech.Services.Commons.Exceptions;
 using Tech.Services.Interfaces.Generics;
 
 namespace Tech.Services.Services.Courses;
 
-public class CourseService<TEntity>(IRepository<Course> repository) : IGettable<TEntity>, IModification<TEntity>
+public class CourseService<CourseDto>(
+	IRepository<Course> repository,
+	IMapper mapper) : IGettable<CourseDto>, IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto>
 {
-	public Task<TEntity> AddAsync(TEntity dto, CancellationToken cancellation = default)
+	public async Task<CourseDto> AddAsync(CourseForCreateDto dto, CancellationToken cancellation = default)
 	{
-		throw new NotImplementedException();
+		try
+		{
+			var mapped = mapper.Map<Course>(dto);
+
+			var course = await repository.AddAsync(mapped, cancellation);
+			await repository.SaveAsync(cancellation);
+
+			var result = mapper.Map<CourseDto>(course);
+			return result;
+		}
+		catch(Exception ex)
+		{
+			throw new CustomException(404, "Couln't add course" + ex.InnerException.Message);
+		}
 	}
 
-	public Task<bool> RemoveAsync(long id, CancellationToken cancellation = default)
+	public async Task<bool> RemoveAsync(long id, CancellationToken cancellation = default)
 	{
-		throw new NotImplementedException();
+		var course = await repository.ExistAsync(id, cancellation);
+
+		if (!course)
+			return false;
+
+		await repository.DeleteAsync(id, cancellation);
+		await repository.SaveAsync(cancellation);
+
+		return true;
 	}
 
-	public Task<IEnumerable<TEntity>> RetreiveAllAsync(CancellationToken cancellation = default)
+	public async Task<IEnumerable<CourseDto>> RetreiveAllAsync(CancellationToken cancellation = default)
 	{
-		throw new NotImplementedException();
+		var includes = new string[] { "Students" };
+		var courses = await repository.SelectAllAsync(null, includes, cancellation);
+
+		if (courses is null)
+			throw new CustomException(404, "Course not found!");
+
+		var mapped = mapper.Map<IEnumerable<CourseDto>>(courses);
+		return mapped;
 	}
 
-	public Task<TEntity> RetreiveByIdAsync(long id, CancellationToken cancellation = default)
+	public async Task<CourseDto> RetreiveByIdAsync(long id, CancellationToken cancellation = default)
 	{
-		throw new NotImplementedException();
+		var includes = new string[] { "Students" };
+		var course = await repository.SelectAsync(null, includes, cancellation);
+
+		if (course is null)
+			throw new CustomException(404, "Course not found!");
+
+		var mapped = mapper.Map<CourseDto>(course);
+		return mapped;
+
 	}
 
-	public Task<TEntity> UpdateAsync(long id, TEntity dto, CancellationToken cancellation = default)
+	public async Task<CourseDto> UpdateAsync(long id, CourseForUpdateDto dto, CancellationToken cancellation = default)
 	{
-		throw new NotImplementedException();
+		if (!await repository.ExistAsync(id, cancellation))
+			throw new CustomException(404, "Id not found!");
+
+		var mapped = mapper.Map<Course>(dto);
+		mapped.Id = id;
+
+		var course = await repository.UpdateAsync(mapped, cancellation);
+		await repository.SaveAsync(cancellation);
+
+		var result = mapper.Map<CourseDto>(course);
+
+		return result;
 	}
 }
