@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
 using Tech.DAL.DTOs.CourseDTOs;
 using Tech.Domain.Entities;
+using Tech.Domain.Enums.Users;
 using Tech.Infrastructure.Interfaces;
 using Tech.Services.Commons.Exceptions;
+using Tech.Services.Interfaces.Courses;
 using Tech.Services.Interfaces.Generics;
 
 namespace Tech.Services.Services.Courses;
 
 public class CourseService<CourseDto>(
 	IRepository<Course> repository,
+	IRepository<User> userRepository,
 	IMapper mapper) : IGettable<CourseDto>, IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto>, IIncludable<CourseDto, string[]>
 {
 	public async Task<CourseDto> AddAsync(CourseForCreateDto dto, CancellationToken cancellation = default)
@@ -17,10 +20,15 @@ public class CourseService<CourseDto>(
 		{
 			var mapped = mapper.Map<Course>(dto);
 
-			var course = await repository.AddAsync(mapped, cancellation);
-			await repository.SaveAsync(cancellation);
+			var teacher = await userRepository.SelectAsync(x => x.Id == mapped.TeacherId, null, cancellation);
 
-			var result = mapper.Map<CourseDto>(course);
+			if (teacher.UserRole == Roles.Admin || teacher.UserRole == Roles.Teacher)
+			{
+				await repository.AddAsync(mapped, cancellation);
+				await repository.SaveAsync(cancellation);
+			}
+
+			var result = mapper.Map<CourseDto>(mapped);
 			return result;
 		}
 		catch(Exception ex)
