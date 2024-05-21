@@ -9,7 +9,7 @@ namespace Tech.Services.Services.Courses;
 
 public class CourseService<CourseDto>(
 	IRepository<Course> repository,
-	IMapper mapper) : IGettable<CourseDto>, IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto>
+	IMapper mapper) : IGettable<CourseDto>, IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto>, IIncludable<CourseDto, string[]>
 {
 	public async Task<CourseDto> AddAsync(CourseForCreateDto dto, CancellationToken cancellation = default)
 	{
@@ -31,9 +31,7 @@ public class CourseService<CourseDto>(
 
 	public async Task<bool> RemoveAsync(long id, CancellationToken cancellation = default)
 	{
-		var course = await repository.ExistAsync(id, cancellation);
-
-		if (!course)
+		if (!await repository.ExistAsync(id, cancellation))
 			return false;
 
 		await repository.DeleteAsync(id, cancellation);
@@ -65,6 +63,17 @@ public class CourseService<CourseDto>(
 		var mapped = mapper.Map<CourseDto>(course);
 		return mapped;
 
+	}
+
+	public async Task<IEnumerable<CourseDto>> RetreiveByIncludesAsync(long id, string[] include, CancellationToken cancellation = default)
+	{
+		var courses = await repository.SelectAllAsync(x => x.Students.Any(s => s.CourseId == id), include, cancellation);
+
+		if (courses is null)
+			throw new CustomException(404, "Course not found!");
+
+		var mapped = mapper.Map<IEnumerable<CourseDto>>(courses);
+		return mapped;
 	}
 
 	public async Task<CourseDto> UpdateAsync(long id, CourseForUpdateDto dto, CancellationToken cancellation = default)
