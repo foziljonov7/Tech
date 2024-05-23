@@ -13,4 +13,5 @@ public class Course : AudiTable
     public double Price { get; set; }
     public Status Status { get; set; }
     public ICollection<CourseEnrollment> Students { get; set; }
+    public ICollection<Attendance> Attendaces { get; set; }
 }

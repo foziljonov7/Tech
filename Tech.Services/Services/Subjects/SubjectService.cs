@@ -9,7 +9,7 @@ namespace Tech.Services.Services.Subjects;
 
 public class SubjectService<TEntity>(
 	IRepository<Subject> repository,
-	IMapper mapper) : IGettable<SubjectDto>, IModification<SubjectDto, SubjectForCreateDto, SubjectForUpdateDto>
+	IMapper mapper) : IGettable<SubjectDto>, IModification<SubjectDto, SubjectForCreateDto, SubjectForUpdateDto>, IIncludable<SubjectDto, string[]>
 {
 	public async Task<SubjectDto> AddAsync(SubjectForCreateDto dto, CancellationToken cancellation = default)
 	{
@@ -61,6 +61,17 @@ public class SubjectService<TEntity>(
 			throw new CustomException(404, "Subject not found!");
 
 		var mapped = mapper.Map<SubjectDto>(subject);
+		return mapped;
+	}
+
+	public async Task<IEnumerable<SubjectDto>> RetreiveByIncludesAsync(long id, string[] include, CancellationToken cancellation = default)
+	{
+		var subjects = await repository.SelectAllAsync(x => x.CategoryId == id, include, cancellation);
+
+		if (subjects is null)
+			throw new CustomException(404, "Subject not found!");
+
+		var mapped = mapper.Map<IEnumerable<SubjectDto>>(subjects);
 		return mapped;
 	}
 

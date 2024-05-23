@@ -12,4 +12,5 @@ public class User : AudiTable
     public string Salt { get; set; }
     public Roles UserRole { get; set; }
     public ICollection<CourseEnrollment> Courses { get; set; }
+    public ICollection<Attendance> Attendaces { get; set; }
 }

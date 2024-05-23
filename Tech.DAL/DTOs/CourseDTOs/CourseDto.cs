@@ -20,4 +20,6 @@ public class CourseDto
 	public Status Status { get; set; }
 	[JsonPropertyName("students")]
 	public ICollection<CourseEnrollment> Students { get; set; }
+    [JsonPropertyName("attendaces")]
+    public ICollection<Attendance> Attendaces { get; set; }
 }

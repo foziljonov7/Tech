@@ -30,5 +30,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(c => c.User)
             .WithMany(c => c.Courses)
             .HasForeignKey(c => c.UserId);
+
+        builder.Entity<Attendance>()
+            .HasOne(a => a.Course)
+            .WithMany(c => c.Attendaces)
+            .HasForeignKey(a => a.CourseId);
+
+        builder.Entity<Attendance>()
+            .HasOne(a => a.User)
+            .WithMany(c => c.Attendaces)
+            .HasForeignKey(a => a.UserId);
 	}
 }
