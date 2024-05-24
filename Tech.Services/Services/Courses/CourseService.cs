@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Tech.DAL.DTOs.CourseDTOs;
 using Tech.Domain.Entities;
+using Tech.Domain.Enums.Courses;
 using Tech.Domain.Enums.Users;
 using Tech.Infrastructure.Interfaces;
 using Tech.Services.Commons.Exceptions;
-using Tech.Services.Interfaces.Courses;
 using Tech.Services.Interfaces.Generics;
 
 namespace Tech.Services.Services.Courses;
@@ -51,7 +51,7 @@ public class CourseService<CourseDto>(
 	public async Task<IEnumerable<CourseDto>> RetreiveAllAsync(CancellationToken cancellation = default)
 	{
 		var includes = new string[] { "Students" };
-		var courses = await repository.SelectAllAsync(null, includes, cancellation);
+		var courses = await repository.SelectAllAsync(x => x.Status == Status.Active, includes, cancellation);
 
 		if (courses is null)
 			throw new CustomException(404, "Course not found!");
@@ -75,7 +75,7 @@ public class CourseService<CourseDto>(
 
 	public async Task<IEnumerable<CourseDto>> RetreiveByIncludesAsync(long id, string[] include, CancellationToken cancellation = default)
 	{
-		var courses = await repository.SelectAllAsync(x => x.Students.Any(s => s.CourseId == id), include, cancellation);
+		var courses = await repository.SelectAllAsync(x => x.Students.Any(s => s.CourseId == id) && x.Status == Status.Active, include, cancellation);
 
 		if (courses is null)
 			throw new CustomException(404, "Course not found!");
