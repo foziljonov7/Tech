@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
+using Tech.DAL.DTOs.AttendanceDTOs;
+using Tech.DAL.DTOs.CategoryDTOs;
 using Tech.DAL.DTOs.CourseDTOs;
+using Tech.DAL.DTOs.PaymentDTOs;
+using Tech.DAL.DTOs.RegistryDTOs;
 using Tech.DAL.DTOs.SubjectDTOs;
 using Tech.DAL.DTOs.UserDTOs;
 using Tech.Domain.Entities;
@@ -21,5 +25,11 @@ public class MappingProfile : Profile
         CreateMap<Subject, SubjectDto>().ReverseMap();
         CreateMap<Subject, SubjectForCreateDto>().ReverseMap(); 
         CreateMap<Subject, SubjectForUpdateDto>().ReverseMap();
+        CreateMap<Attendance, AttendanceDto>().ReverseMap();
+        CreateMap<Attendance, AttendanceForUpdateDto>().ReverseMap();
+        CreateMap<Category, CategoryDto>().ReverseMap();
+        CreateMap<Payment, GetPaymentDto>().ReverseMap();
+        CreateMap<Payment, PaymentForCourseDto>().ReverseMap();
+        CreateMap<Registry, RegistryDto>().ReverseMap();
     }
 }

@@ -7,7 +7,7 @@ using Tech.Services.Interfaces.Generics;
 
 namespace Tech.Services.Services.Subjects;
 
-public class SubjectService<TEntity>(
+public class SubjectService<SubjectDto>(
 	IRepository<Subject> repository,
 	IMapper mapper) : IGettable<SubjectDto>, IModification<SubjectDto, SubjectForCreateDto, SubjectForUpdateDto>, IIncludable<SubjectDto, string[]>
 {

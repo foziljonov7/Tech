@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using OfficeOpenXml;
 using Tech.DAL.DTOs.CourseDTOs;
+using Tech.DAL.DTOs.ExportDTOs;
 using Tech.Domain.Entities;
 using Tech.Domain.Enums.Courses;
 using Tech.Domain.Enums.Users;
 using Tech.Infrastructure.Interfaces;
 using Tech.Services.Commons.Exceptions;
+using Tech.Services.Interfaces.Exports;
 using Tech.Services.Interfaces.Generics;
 
 namespace Tech.Services.Services.Courses;
@@ -12,7 +15,8 @@ namespace Tech.Services.Services.Courses;
 public class CourseService<CourseDto>(
 	IRepository<Course> repository,
 	IRepository<User> userRepository,
-	IMapper mapper) : IGettable<CourseDto>, IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto>, IIncludable<CourseDto, string[]>
+	IMapper mapper) : IGettable<CourseDto>, IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto>,
+	IIncludable<CourseDto, string[]>, IExport
 {
 	public async Task<CourseDto> AddAsync(CourseForCreateDto dto, CancellationToken cancellation = default)
 	{
@@ -37,7 +41,29 @@ public class CourseService<CourseDto>(
 		}
 	}
 
-	public async Task<bool> RemoveAsync(long id, CancellationToken cancellation = default)
+    public async Task<FileResultDto> ExportToExcelAsync(CancellationToken cancellation = default)
+    {
+		var data = await repository.SelectAllAsync(x => x.Status == Status.Active, null, cancellation);
+
+		using(var package = new ExcelPackage())
+		{
+			var workSheet = package.Workbook.Worksheets.Add("Course_sheet1");
+			workSheet.Cells.LoadFromCollection(data, true);
+
+			var stream = new MemoryStream();
+			package.SaveAs(stream);
+			var fileContents = stream.ToArray();
+
+			return new FileResultDto
+			{
+				Contents = fileContents,
+				ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				FileName = "data.xlsx"
+			};
+        }
+    }
+
+    public async Task<bool> RemoveAsync(long id, CancellationToken cancellation = default)
 	{
 		if (!await repository.ExistAsync(id, cancellation))
 			return false;
@@ -63,7 +89,7 @@ public class CourseService<CourseDto>(
 	public async Task<CourseDto> RetreiveByIdAsync(long id, CancellationToken cancellation = default)
 	{
 		var includes = new string[] { "Students" };
-		var course = await repository.SelectAsync(null, includes, cancellation);
+		var course = await repository.SelectAsync(x => x.Id == id, includes, cancellation);
 
 		if (course is null)
 			throw new CustomException(404, "Course not found!");

@@ -2,10 +2,8 @@
 
 namespace Tech.DAL.DTOs.AttendanceDTOs;
 
-public class AttendanceDto
+public class AttendanceForUpdateDto
 {
-    [JsonPropertyName("id")]
-    public long Id { get; set; }
     [JsonPropertyName("user_id")]
     public long UserId { get; set; }
     [JsonPropertyName("course_id")]
