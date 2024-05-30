@@ -11,6 +11,7 @@ using Tech.Infrastructure.Interfaces;
 using Tech.Infrastructure.Repositories;
 using Tech.Services.Interfaces.Attendaces;
 using Tech.Services.Interfaces.Courses;
+using Tech.Services.Interfaces.Exports;
 using Tech.Services.Interfaces.Generics;
 using Tech.Services.Interfaces.Payments;
 using Tech.Services.Interfaces.Users;
@@ -53,7 +54,8 @@ public static class ServiceConfigure
 		services.AddScoped<IGettable<CourseDto>, CourseService<CourseDto>>();
 		services.AddScoped<IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto>, CourseService<CourseDto>>();
 		services.AddScoped<IIncludable<CourseDto, string[]>, CourseService<CourseDto>>();
-		services.AddScoped<ICourseEnrollment, CourseEnrollmentService>();
+		//services.AddScoped<ICourseEnrollment, CourseEnrollmentService>();
+		services.AddScoped<IExport, CourseService<CourseDto>>();
 
 		//Category services
 		services.AddScoped<IGettable<CategoryDto>, CategoryService>();
