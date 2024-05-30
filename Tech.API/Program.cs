@@ -9,6 +9,7 @@ builder.Services
 	.AddDbConfigure(builder.Configuration)
 	.AddAutoMapper(typeof(MappingProfile))
 	.AddServiceConfigure()
+	.AddValidatorConfigure()
 	.AddConfigureCors()
 	.AddSwaggerService()
 	.AddJwtService(builder.Configuration)

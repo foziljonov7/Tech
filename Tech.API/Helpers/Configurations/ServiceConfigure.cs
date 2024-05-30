@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Tech.API.Filters.Courses;
 using Tech.DAL.DbContexts;
 using Tech.DAL.DTOs.AttendanceDTOs;
 using Tech.DAL.DTOs.CategoryDTOs;
@@ -71,6 +73,16 @@ public static class ServiceConfigure
 
 		//Registry services
 		services.AddScoped<IRegistry, RegistryService>();
+
+		return services;
+	}
+
+	public static IServiceCollection AddValidatorConfigure(
+		this IServiceCollection services)
+	{
+		//course validations
+		services.AddScoped<IValidator<CourseForCreateDto>, CourseForCreateValidator>();
+		services.AddScoped<IValidator<CourseForUpdateDto>, CourseForUpdateValidator>();
 
 		return services;
 	}

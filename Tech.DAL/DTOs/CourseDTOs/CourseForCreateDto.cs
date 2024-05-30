@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Tech.Domain.Enums.Courses;
 
 namespace Tech.DAL.DTOs.CourseDTOs;
 

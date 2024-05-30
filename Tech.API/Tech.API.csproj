@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Filters\Courses\" />
     <Folder Include="Filters\Attendaces\" />
     <Folder Include="Filters\Categories\" />
     <Folder Include="Filters\Users\" />
