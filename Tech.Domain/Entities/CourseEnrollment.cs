@@ -1,6 +1,8 @@
-﻿namespace Tech.Domain.Entities;
+﻿using Tech.Domain.Helpers.Commons;
 
-public class CourseEnrollment
+namespace Tech.Domain.Entities;
+
+public class CourseEnrollment : AudiTable
 {
     public long UserId { get; set; }
     public User User { get; set; }

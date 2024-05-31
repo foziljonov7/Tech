@@ -1,22 +1,19 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.WebSockets;
 using Tech.API.Helpers.Responses;
 using Tech.DAL.DTOs.CourseDTOs;
-using Tech.Services.Interfaces.Courses;
 using Tech.Services.Interfaces.Exports;
 using Tech.Services.Interfaces.Generics;
 
 namespace Tech.API.Controllers.Courses
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController, Authorize]
 	public class CourseController(
 		IGettable<CourseDto> service,
 		IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto> modService,
 		IIncludable<CourseDto, string[]> includeService,
-		ICourseEnrollment courseEnrolmentService,
 		IExport exportService,
 		IValidator<CourseForCreateDto> createValidator,
 		IValidator<CourseForUpdateDto> updateValidator,

@@ -15,3 +15,4 @@ public class Course : AudiTable
     public ICollection<CourseEnrollment> Students { get; set; }
     public ICollection<Attendance> Attendaces { get; set; }
 }
+    
