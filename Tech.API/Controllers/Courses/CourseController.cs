@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tech.API.Helpers.Responses;
 using Tech.DAL.DTOs.CourseDTOs;
+using Tech.Services.Interfaces.Courses;
 using Tech.Services.Interfaces.Exports;
 using Tech.Services.Interfaces.Generics;
 
@@ -15,6 +16,7 @@ namespace Tech.API.Controllers.Courses
 		IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto> modService,
 		IIncludable<CourseDto, string[]> includeService,
 		IExport exportService,
+		ICourseEnrollment courseEnrollmentService,
 		IValidator<CourseForCreateDto> createValidator,
 		IValidator<CourseForUpdateDto> updateValidator,
 		ILogger<CourseController> logger) : ControllerBase
@@ -161,5 +163,33 @@ namespace Tech.API.Controllers.Courses
 				Message = "Success",
 				Data = await exportService.ExportToExcelAsync(cancellation)
 			});
+
+		[HttpPost("{id}/students")]
+		public async Task<IActionResult> AddStudentsByCourseAsync(
+			[FromRoute] long id,
+			[FromBody] List<long> students,
+			CancellationToken cancellation = default)
+		{
+			try
+			{
+				return Ok(new Response
+				{
+					Flag = true,
+					Message = "Success",
+					Data = await courseEnrollmentService.AddStudentByCourseAsync(id, students, cancellation)
+				});
+			}
+			catch(Exception ex)
+			{
+				logger.LogError(ex, "An error occured while Added students with Course");
+
+				return StatusCode(500, new Response
+				{
+					Flag = false,
+					Message = ex.InnerException.Message,
+					Data = ex.InnerException.Data
+				});
+			}
+		}
 	}
 }
