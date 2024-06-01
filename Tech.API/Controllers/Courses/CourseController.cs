@@ -7,189 +7,188 @@ using Tech.Services.Interfaces.Courses;
 using Tech.Services.Interfaces.Exports;
 using Tech.Services.Interfaces.Generics;
 
-namespace Tech.API.Controllers.Courses
+namespace Tech.API.Controllers.Courses;
+
+[Route("api/[controller]")]
+[ApiController, Authorize]
+public class CourseController(
+	IGettable<CourseDto> service,
+	IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto> modService,
+	IIncludable<CourseDto, string[]> includeService,
+	IExport exportService,
+	ICourseEnrollment courseEnrollmentService,
+	IValidator<CourseForCreateDto> createValidator,
+	IValidator<CourseForUpdateDto> updateValidator,
+	ILogger<CourseController> logger) : ControllerBase
 {
-    [Route("api/[controller]")]
-	[ApiController, Authorize]
-	public class CourseController(
-		IGettable<CourseDto> service,
-		IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto> modService,
-		IIncludable<CourseDto, string[]> includeService,
-		IExport exportService,
-		ICourseEnrollment courseEnrollmentService,
-		IValidator<CourseForCreateDto> createValidator,
-		IValidator<CourseForUpdateDto> updateValidator,
-		ILogger<CourseController> logger) : ControllerBase
+	[HttpGet]
+	public async Task<IActionResult> GetAllAsync(CancellationToken cancellation = default)
+		=> Ok(new Response
+		{
+			Flag = true,
+			Message = "Success",
+			Data = await service.RetreiveAllAsync(cancellation)
+		});
+
+	[HttpGet("{id}")]
+	public async Task<IActionResult> GetAsync(
+		[FromRoute] long id,
+		CancellationToken cancellation = default)
+		=> Ok(new Response
+		{
+			Flag = true,
+			Message = "Success",
+			Data = await service.RetreiveByIdAsync(id, cancellation)
+		});
+
+	[HttpPost]
+	public async Task<IActionResult> CreateAsync(
+		[FromBody] CourseForCreateDto request,
+		CancellationToken cancellation = default)
 	{
-		[HttpGet]
-		public async Task<IActionResult> GetAllAsync(CancellationToken cancellation = default)
-			=> Ok(new Response
-			{
-				Flag = true,
-				Message = "Success",
-				Data = await service.RetreiveAllAsync(cancellation)
-			});
-
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetAsync(
-			[FromRoute] long id,
-			CancellationToken cancellation = default)
-			=> Ok(new Response
-			{
-				Flag = true,
-				Message = "Success",
-				Data = await service.RetreiveByIdAsync(id, cancellation)
-			});
-
-		[HttpPost]
-		public async Task<IActionResult> CreateAsync(
-			[FromBody] CourseForCreateDto request,
-			CancellationToken cancellation = default)
+		try
 		{
-			try
-			{
-				var validationResult = await createValidator.ValidateAsync(request, cancellation);
+			var validationResult = await createValidator.ValidateAsync(request, cancellation);
 
-				if (!validationResult.IsValid)
-					return BadRequest(new Response
-					{
-						Flag = false,
-						Message = string.Join(Environment.NewLine, validationResult.Errors.Select(request => request.ErrorMessage)),
-						Data = null
-					});
-
-				return Ok(new Response
-				{
-					Flag = true,
-					Message = "Success",
-					Data = await modService.AddAsync(request, cancellation)
-				});
-			}
-			catch (Exception ex)
-			{
-				logger.LogError(ex, "An error occured while creating course");
-
-				return StatusCode(500, new Response
+			if (!validationResult.IsValid)
+				return BadRequest(new Response
 				{
 					Flag = false,
-					Message = ex.InnerException.Message,
-					Data = ex.InnerException.Data
+					Message = string.Join(Environment.NewLine, validationResult.Errors.Select(request => request.ErrorMessage)),
+					Data = null
 				});
-			}
+
+			return Ok(new Response
+			{
+				Flag = true,
+				Message = "Success",
+				Data = await modService.AddAsync(request, cancellation)
+			});
 		}
-
-		[HttpPut("{id}")]
-		public async Task<IActionResult> ModifyAsync(
-			[FromRoute] long id,
-			[FromBody] CourseForUpdateDto request,
-			CancellationToken cancellation = default)
+		catch (Exception ex)
 		{
-			try
+			logger.LogError(ex, "An error occured while creating course");
+
+			return StatusCode(500, new Response
 			{
-				var validationResult = await updateValidator.ValidateAsync(request, cancellation);
+				Flag = false,
+				Message = ex.InnerException.Message,
+				Data = ex.InnerException.Data
+			});
+		}
+	}
 
-				if (!validationResult.IsValid)
-					return BadRequest(new Response
-					{
-						Flag = true,
-						Message = string.Join(Environment.NewLine, validationResult.Errors.Select(request => request.ErrorMessage)),
-						Data = null
-					});
+	[HttpPut("{id}")]
+	public async Task<IActionResult> ModifyAsync(
+		[FromRoute] long id,
+		[FromBody] CourseForUpdateDto request,
+		CancellationToken cancellation = default)
+	{
+		try
+		{
+			var validationResult = await updateValidator.ValidateAsync(request, cancellation);
 
-				return Ok(new Response
+			if (!validationResult.IsValid)
+				return BadRequest(new Response
 				{
 					Flag = true,
-					Message = "Success",
-					Data = await modService.UpdateAsync(id, request, cancellation)
+					Message = string.Join(Environment.NewLine, validationResult.Errors.Select(request => request.ErrorMessage)),
+					Data = null
 				});
-			}
-			catch(Exception ex)
-			{
-				logger.LogError(ex, "An error occured while updated course.");
 
-				return StatusCode(500, new Response
-				{
-					Flag = false,
-					Message = ex.InnerException.Message,
-					Data = ex.InnerException.Data
-				});
-			}
-		}
-
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> RemoveAsync(
-			[FromRoute] long id,
-			CancellationToken cancellation = default)
-			=> Ok(new Response
+			return Ok(new Response
 			{
 				Flag = true,
 				Message = "Success",
-				Data = await modService.RemoveAsync(id, cancellation)
+				Data = await modService.UpdateAsync(id, request, cancellation)
 			});
-
-		[HttpGet("students/{id}")]
-		public async Task<IActionResult> GetStudentsAsync(
-			[FromRoute] long id,
-			CancellationToken cancellation = default)
-		{
-			try
-			{
-				string[] includes = { "Students", "Attendaces" };
-				return Ok(new Response
-				{
-					Flag = true,
-					Message = "Success",
-					Data = await includeService.RetreiveByIncludesAsync(id, includes, cancellation)
-				});
-			}
-			catch(Exception ex)
-			{
-				logger.LogError(ex, "An error occured receiving course.");
-
-				return StatusCode(500, new Response
-				{
-					Flag = false,
-					Message = ex.InnerException.Message,
-					Data = ex.InnerException.Data
-				});
-			}
 		}
+		catch(Exception ex)
+		{
+			logger.LogError(ex, "An error occured while updated course.");
 
-		[HttpGet("export")]
-		public async Task<IActionResult> ExportToExcelAsync(CancellationToken cancellation = default)
-			=> Ok(new Response
+			return StatusCode(500, new Response
+			{
+				Flag = false,
+				Message = ex.InnerException.Message,
+				Data = ex.InnerException.Data
+			});
+		}
+	}
+
+	[HttpDelete("{id}")]
+	public async Task<IActionResult> RemoveAsync(
+		[FromRoute] long id,
+		CancellationToken cancellation = default)
+		=> Ok(new Response
+		{
+			Flag = true,
+			Message = "Success",
+			Data = await modService.RemoveAsync(id, cancellation)
+		});
+
+	[HttpGet("students/{id}")]
+	public async Task<IActionResult> GetStudentsAsync(
+		[FromRoute] long id,
+		CancellationToken cancellation = default)
+	{
+		try
+		{
+			string[] includes = { "Students", "Attendaces" };
+			return Ok(new Response
 			{
 				Flag = true,
 				Message = "Success",
-				Data = await exportService.ExportToExcelAsync(cancellation)
+				Data = await includeService.RetreiveByIncludesAsync(id, includes, cancellation)
 			});
-
-		[HttpPost("{id}/students")]
-		public async Task<IActionResult> AddStudentsByCourseAsync(
-			[FromRoute] long id,
-			[FromBody] List<long> students,
-			CancellationToken cancellation = default)
+		}
+		catch(Exception ex)
 		{
-			try
-			{
-				return Ok(new Response
-				{
-					Flag = true,
-					Message = "Success",
-					Data = await courseEnrollmentService.AddStudentByCourseAsync(id, students, cancellation)
-				});
-			}
-			catch(Exception ex)
-			{
-				logger.LogError(ex, "An error occured while Added students with Course");
+			logger.LogError(ex, "An error occured receiving course.");
 
-				return StatusCode(500, new Response
-				{
-					Flag = false,
-					Message = ex.InnerException.Message,
-					Data = ex.InnerException.Data
-				});
-			}
+			return StatusCode(500, new Response
+			{
+				Flag = false,
+				Message = ex.InnerException.Message,
+				Data = ex.InnerException.Data
+			});
+		}
+	}
+
+	[HttpGet("export")]
+	public async Task<IActionResult> ExportToExcelAsync(CancellationToken cancellation = default)
+		=> Ok(new Response
+		{
+			Flag = true,
+			Message = "Success",
+			Data = await exportService.ExportToExcelAsync(cancellation)
+		});
+
+	[HttpPost("{id}/students")]
+	public async Task<IActionResult> AddStudentsByCourseAsync(
+		[FromRoute] long id,
+		[FromBody] List<long> students,
+		CancellationToken cancellation = default)
+	{
+		try
+		{
+			return Ok(new Response
+			{
+				Flag = true,
+				Message = "Success",
+				Data = await courseEnrollmentService.AddStudentByCourseAsync(id, students, cancellation)
+			});
+		}
+		catch(Exception ex)
+		{
+			logger.LogError(ex, "An error occured while Added students with Course");
+
+			return StatusCode(500, new Response
+			{
+				Flag = false,
+				Message = ex.InnerException.Message,
+				Data = ex.InnerException.Data
+			});
 		}
 	}
 }
