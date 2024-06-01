@@ -23,12 +23,4 @@
     <ProjectReference Include="..\Tech.Services\Tech.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Filters\Attendaces\" />
-    <Folder Include="Filters\Categories\" />
-    <Folder Include="Filters\Users\" />
-    <Folder Include="Filters\Payments\" />
-    <Folder Include="Filters\Subjects\" />
-  </ItemGroup>
-
 </Project>

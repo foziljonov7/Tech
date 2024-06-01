@@ -54,7 +54,7 @@ public static class ServiceConfigure
 		services.AddScoped<IGettable<CourseDto>, CourseService<CourseDto>>();
 		services.AddScoped<IModification<CourseDto, CourseForCreateDto, CourseForUpdateDto>, CourseService<CourseDto>>();
 		services.AddScoped<IIncludable<CourseDto, string[]>, CourseService<CourseDto>>();
-		//services.AddScoped<ICourseEnrollment, CourseEnrollmentService>();
+		services.AddScoped<ICourseEnrollment, CourseEnrollmentService>();
 		services.AddScoped<IExport, CourseService<CourseDto>>();
 
 		//Category services
