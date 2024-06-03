@@ -19,7 +19,7 @@ public class SubjectController(
 {
     // GET: api/<SubjectController>
     [HttpGet]
-    public async Task<IActionResult> GeTAllAsync(CancellationToken cancellation = default)
+    public async Task<IActionResult> GetAllAsync(CancellationToken cancellation = default)
         => Ok(new Response
         {
             Flag = true,
@@ -38,6 +38,35 @@ public class SubjectController(
             Message = "Success",
             Data = await service.RetreiveByIdAsync(id, cancellation)
         });
+
+    //GET api/<SubjectController>/categoryId
+    [HttpGet("categorys/{categoryId}")]
+    public async Task<IActionResult> GetByCategoryIdAsync(
+        [FromRoute] long categoryId,
+        CancellationToken cancellation = default)
+    {
+        try
+        {
+            string[] includes = { "Category" };
+            return Ok(new Response
+            {
+                Flag = true,
+                Message = "Success",
+                Data = await includeService.RetreiveByIncludesAsync(categoryId, includes, cancellation)
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occured receiving subject");
+
+            return StatusCode(500, new Response
+            {
+                Flag = false,
+                Message = ex.InnerException.Message,
+                Data = ex.InnerException.Data
+            });
+        }
+    }
 
     // POST api/<SubjectController>
     [HttpPost]
