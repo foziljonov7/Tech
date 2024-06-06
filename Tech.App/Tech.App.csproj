@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tech.DAL\Tech.DAL.csproj" />
+    <ProjectReference Include="..\Tech.Services\Tech.Services.csproj" />
+  </ItemGroup>
+
 </Project>

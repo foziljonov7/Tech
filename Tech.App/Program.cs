@@ -1,4 +1,6 @@
 using Tech.App.Components;
+using Tech.Services.Interfaces.Users;
+using Tech.Services.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
