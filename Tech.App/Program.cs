@@ -1,11 +1,11 @@
 using Tech.App.Components;
-using Tech.Services.Interfaces.Users;
-using Tech.Services.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }); ;
 
 var app = builder.Build();
 
