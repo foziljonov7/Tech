@@ -1,6 +1,8 @@
-@Tech.API_HostAddress = http://localhost:5125
+@Tech.API_HostAddress = https://localhost:7156
 
-GET {{Tech.API_HostAddress}}/weatherforecast/
+GET {{Tech.API_HostAddress}}/course/
 Accept: application/json
 
+GET {{Tech.API_HostAddress}}/user/
+Accept: application/json
 ###

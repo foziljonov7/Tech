@@ -14,7 +14,7 @@ public class PaymentService(
     IRegistry registryService,
     IMapper mapper) : IGettable<GetPaymentDto>, IPayment<GetPaymentDto, PaymentForCourseDto>
 {
-    public async Task<IEnumerable<GetPaymentDto>> GetPaymentByCoursesAsync(int id, CancellationToken cancellation = default)
+    public async Task<IEnumerable<GetPaymentDto>> GetPaymentByCoursesAsync(long id, CancellationToken cancellation = default)
     {
         var payments = await repository.SelectAllAsync(x => x.CourseId == id, null, cancellation);
 
@@ -25,7 +25,7 @@ public class PaymentService(
         return mapped;
     }
 
-    public async Task<IEnumerable<GetPaymentDto>> GetPaymentByStudentAsync(int id, CancellationToken cancellation = default)
+    public async Task<IEnumerable<GetPaymentDto>> GetPaymentByStudentAsync(long id, CancellationToken cancellation = default)
     {
         var payments = await repository.SelectAllAsync(x => x.StudentId == id, null, cancellation);
 
