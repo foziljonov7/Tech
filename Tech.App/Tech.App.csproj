@@ -7,12 +7,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Components\Pages\Course.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Tech.DAL\Tech.DAL.csproj" />
     <ProjectReference Include="..\Tech.Services\Tech.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Course.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Pages\Course.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\Pages\Course.razor" />
   </ItemGroup>
 
 </Project>

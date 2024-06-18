@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tech.Infrastructure", "Tech
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tech.DAL", "Tech.DAL\Tech.DAL.csproj", "{49CDF25F-B11E-4BBA-AFDB-AA5C69D32751}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech.App", "Tech.App\Tech.App.csproj", "{86FD6018-BF49-4331-AFA9-A2C3CBED6F2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tech.App", "Tech.App\Tech.App.csproj", "{86FD6018-BF49-4331-AFA9-A2C3CBED6F2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
