@@ -1,4 +1,6 @@
 ﻿@page "/course"
+@using Tech.Services.Services.Courses
+@inject CourseService courseService
 
 <h3>Course</h3>
 
@@ -6,32 +8,46 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Teacher</th>
-            <th scope="col">Price</th>
-            <th scope="col">Starting Date</th>
+            <th scope="col">O'qituvchi</th>
+            <th scope="col">Narxi</th>
+            <th scope="col">Boshlangan sana</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-        </tr>
-    </tbody>
+    @foreach(var course in courses)
+    {
+        <tbody>
+            <tr>
+                <th scope="row">@course.SubjectId</th>
+                <td>@course.TeacherId</td>
+                <td>@course.StartingDate</td>
+                <td>@course.Price</td>
+            </tr>
+        </tbody>
+
+    }
 </table>
 
 @code {
+    public long SubjectId { get; set; }
+    public long TeacherId { get; set; }
+    public DateTime StartingDate { get; set; }
+    public double Price { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await RetreiveAllAsync();
+    }
+
+    private async Task RetreiveAllAsync(CancellationToken cancellation = default)
+    {
+        var courses = await courseService.RetreiveAllAsync(cancellation);
+
+        if(courses is not null)
+        {
+            SubjectId = courses.SubjectId;
+            TeacherId = courses.TeacherId;
+            StartingDate = courses.StartingDate;
+            Price = courses.Price;
+        }
+    }
 }
