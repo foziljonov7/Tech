@@ -1,0 +1,40 @@
+﻿@page "/course"
+@using Tech.Services.Services.Courses
+@using Tech.DAL.DTOs.CourseDTOs
+@inject CourseService<CourseDto> CourseService
+
+<h3>Course</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">O'qituvchi</th>
+            <th scope="col">Narxi</th>
+            <th scope="col">Boshlangan sana</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in courses)
+        {
+            <tr>
+                <th scope="row">@course.SubjectId</th>
+                <td>@course.TeacherId</td>
+                <td>@course.StartingDate</td>
+                <td>@course.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<CourseDto> courses = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RetreiveAllAsync();
+    }
+
+    private async Task RetreiveAllAsync(CancellationToken cancellationToken = default) 
+        => courses = await CourseService.RetreiveAllAsync(cancellationToken);
+}
