@@ -1,0 +1,53 @@
+﻿@page "/login"
+@using Blazored.LocalStorage
+@using MudBlazor
+@using Tech.Web.Model
+@using Tech.Web.Model.Account
+@inject HttpClient Http
+@inject ILocalStorageService storageService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <InputText id="phone" @bind-Value="loginModel.PhoneNumber" class="form-control" />
+            <ValidationMessage For="@(() => loginModel.PhoneNumber)" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <InputText id="password" type="password" @bind-Value="loginModel.Password" class="form-control" />
+            <ValidationMessage For="@(() => loginModel.Password)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PostAsJsonAsync(Helper.URL + "Login", loginModel);
+
+        if(response.IsSuccessStatusCode)
+        {
+            var token = await response.Content.ReadFromJsonAsync<TokenModel>();
+            await storageService.SetItemAsync("authToken", token);
+            Navigation.NavigateTo("/courses");
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Navigation.NavigateTo("/login");
+        }
+    }
+}

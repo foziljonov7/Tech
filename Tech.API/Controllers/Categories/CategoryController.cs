@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tech.API.Helpers.Responses;
 using Tech.DAL.DTOs.CategoryDTOs;
 using Tech.Services.Interfaces.Generics;
@@ -6,7 +7,7 @@ using Tech.Services.Interfaces.Generics;
 namespace Tech.API.Controllers.Categories;
 
 [Route("api/[controller]")]
-[ApiController]
+[ApiController, Authorize]
 public class CategoryController(
     IGettable<CategoryDto> service,
     ILogger<CategoryController> logger) : ControllerBase
