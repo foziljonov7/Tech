@@ -38,6 +38,8 @@
     {
         var response = await Http.PostAsJsonAsync(Helper.URL + "Login", loginModel);
 
+        Console.WriteLine($"loginModel :  PhoneNumber = {loginModel.PhoneNumber}, Password = {loginModel.Password}");
+
         if(response.IsSuccessStatusCode)
         {
             var token = await response.Content.ReadFromJsonAsync<TokenModel>();
