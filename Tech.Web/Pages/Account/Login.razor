@@ -8,28 +8,26 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<link href="~/css/Login.css" rel="stylesheet"/>
 
-    <div class="login-container">
-        <h2>Login</h2>
+<EditForm Model="@loginModel" OnValidSubmit="HandleValidSubmit" class="login-container">
+    <h2>Login</h2>
 
-        <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <InputText id="phone" @bind-Value="loginModel.PhoneNumber" class="form-control" />
-            <ValidationMessage For="@(() => loginModel.PhoneNumber)" />
-        </div>
-
-        <div class="form-group">
-            <label for="password">Password</label>
-            <InputText id="password" type="password" @bind-Value="loginModel.Password" class="form-control" />
-            <ValidationMessage For="@(() => loginModel.Password)" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Login</button>
+    <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <InputText id="phone" @bind-Value="loginModel.PhoneNumber" class="form-control" />
+        <ValidationMessage For="@(() => loginModel.PhoneNumber)" />
     </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <InputText id="password" type="password" @bind-Value="loginModel.Password" class="form-control" />
+        <ValidationMessage For="@(() => loginModel.Password)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
+
 
 @code {
     private LoginModel loginModel = new LoginModel();

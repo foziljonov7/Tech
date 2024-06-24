@@ -1,0 +1,66 @@
+﻿@page "/register"
+@using MudBlazor
+@using Tech.Web.Model
+@using Tech.Web.Model.Account
+@inject HttpClient client
+@inject NavigationManager Navigation
+
+<link href="~/css/Register.css" rel="stylesheet"/>
+
+<h2>Register</h2>
+
+<EditForm Model="@registerModel" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="firstname">First Name</label>
+        <InputText id="firstname" @bind-Value="registerModel.Firstname" class="form-control" />
+        <ValidationMessage For="@(() => registerModel.Firstname)" />
+    </div>
+
+    <div class="form-group">
+        <label for="lastname">Last Name</label>
+        <InputText id="lastname" @bind-Value="registerModel.Lastname" class="form-control" />
+        <ValidationMessage For="@(() => registerModel.Lastname)" />
+    </div>
+
+    <div class="form-group">
+        <label for="phone_number">Phone Number</label>
+        <InputText id="phone_number" @bind-Value="registerModel.PhoneNumber" class="form-control" />
+        <ValidationMessage For="@(() => registerModel.PhoneNumber)" />
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <InputText id="password" type="password" @bind-Value="registerModel.Password" class="form-control" />
+        <ValidationMessage For="@(() => registerModel.Password)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</EditForm>
+
+@code {
+    private RegisterModel registerModel = new RegisterModel();
+    @inject ISnackbar Snackbar
+
+    private async Task HandleRegister()
+    {
+        var response = await client.PostAsJsonAsync(Helper.URL + "register", registerModel);
+        if(response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Successfully register!", Severity.Success);
+            Navigation.NavigateTo("/login");
+        }
+        else if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Navigation.NavigateTo("/register");
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Navigation.NavigateTo("/register");
+        }
+    }
+}
