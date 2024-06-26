@@ -42,7 +42,7 @@ public class UserService(
 
 		else if (dto.NewPassword != dto.ConfirmPassword)
 			throw new CustomException(404, "New password and confirm password aren't equal");
-
+		
 		var hash = PasswordHelper.Hash(dto.ConfirmPassword);
 		user.Salt = hash.Salt;
 		user.Password = hash.Hash;
